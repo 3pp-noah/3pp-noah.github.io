@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>3PP-NOAH</title>
+<meta name="description" content="3PP-NOAH: the nth-member sites from one place.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ctext x='32' y='50' font-size='52' text-anchor='middle' font-family='Georgia,serif'%3E%CE%A9%3C/text%3E%3C/svg%3E">
+<style>
+:root{
+  color-scheme: light;
+  --plane:#f9f9f7; --surface:#fcfcfb;
+  --ink:#0b0b0b; --ink-2:#52514e; --muted:#898781;
+  --line:#e1e0d9; --axis:#c3c2b7; --accent:#2a78d6;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme: dark;
+    --plane:#0d0d0d; --surface:#1a1a19;
+    --ink:#ffffff; --ink-2:#c3c2b7; --muted:#898781;
+    --line:#2c2c2a; --axis:#383835; --accent:#3987e5;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --plane:#0d0d0d; --surface:#1a1a19;
+  --ink:#ffffff; --ink-2:#c3c2b7; --muted:#898781;
+  --line:#2c2c2a; --axis:#383835; --accent:#3987e5;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--plane);color:var(--ink);
+  font:15px/1.5 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:max(16px,env(safe-area-inset-top)) 16px max(16px,env(safe-area-inset-bottom))}
+h1{margin:0 0 4px;font-size:clamp(20px,4.5vmin,30px);letter-spacing:.18em;font-weight:600}
+.dial{position:relative;width:min(92vw,78vh,640px);aspect-ratio:1;margin:8px 0 4px}
+.omega{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;
+  font-family:Georgia,"Times New Roman",serif;font-size:calc(min(92vw,78vh,640px) * .62);line-height:1;
+  color:var(--ink);user-select:none;transform:translateY(-2%)}
+.ring{position:absolute;inset:14%;border:1px solid var(--line);border-radius:50%;pointer-events:none}
+fieldset{border:0;margin:0;padding:0}
+fieldset legend{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.opt{position:absolute;transform:translate(-50%,-11px);display:flex;flex-direction:column;align-items:center;gap:6px;
+  cursor:pointer;text-align:center;width:26%}
+.opt input{appearance:none;-webkit-appearance:none;margin:0;width:22px;height:22px;border-radius:50%;
+  border:2px solid var(--axis);background:var(--surface);display:grid;place-content:center;cursor:pointer;
+  transition:border-color .15s}
+.opt input::before{content:"";width:10px;height:10px;border-radius:50%;background:var(--accent);transform:scale(0);
+  transition:transform .15s}
+.opt input:checked{border-color:var(--accent)}
+.opt input:checked::before{transform:scale(1)}
+.opt input:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.opt span{font-size:clamp(11px,2.3vmin,14px);font-weight:600;letter-spacing:.04em;line-height:1.25;
+  background:var(--plane);padding:1px 6px;border-radius:6px}
+.opt:hover input{border-color:var(--muted)}
+/* the six points of a hexagon around the Ω: nth-member at the top, then clockwise */
+.p0{left:50%;top:3%}
+.p1{left:87%;top:22%}
+.p2{left:87%;top:68%}
+.p3{left:50%;top:88%}
+.p4{left:13%;top:68%}
+.p5{left:13%;top:22%}
+.panel{min-height:92px;max-width:520px;width:100%;text-align:center;margin-top:6px}
+.panel p{margin:0 0 10px;color:var(--ink-2)}
+.panel .hint{color:var(--muted);font-size:13px}
+.go{display:inline-block;padding:8px 18px;border-radius:8px;background:var(--ink);color:var(--plane);
+  text-decoration:none;font-weight:600;letter-spacing:.02em}
+.go:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.go[hidden]{display:none}
+</style>
+</head>
+<body>
+<h1>3PP-NOAH</h1>
+
+<div class="dial">
+  <div class="ring"></div>
+  <div class="omega" aria-hidden="true">Ω</div>
+  <fieldset>
+    <legend>Choose a site</legend>
+    <label class="opt p0"><input type="radio" name="site" value="nth-member"><span>NTH-MEMBER</span></label>
+    <label class="opt p1"><input type="radio" name="site" value="revott"><span>REVOTT</span></label>
+    <label class="opt p2"><input type="radio" name="site" value="member"><span>THE NTH MEMBER</span></label>
+    <label class="opt p3"><input type="radio" name="site" value="gdelt"><span>GDELT</span></label>
+    <label class="opt p4"><input type="radio" name="site" value="gematria"><span>H-GEMATRIA/ASCII</span></label>
+    <label class="opt p5"><input type="radio" name="site" value="alien-corridor"><span>ALIEN CORRIDOR</span></label>
+  </fieldset>
+</div>
+
+<div class="panel" aria-live="polite">
+  <p id="about" class="hint">Choose a site.</p>
+  <a class="go" id="go" hidden>Open</a>
+</div>
+
+<script>
+"use strict";
+const SITES = {
+  "nth-member": ["nth-member", "The nth-member organisation's own page: its five sites, listed."],
+  "revott": ["REVOTT atop GDELT", "The field at every node of an instance: hold Y and read what GDELT carried on each of the 400 SFO-BB dates."],
+  "member": ["The nth member", "REVOTT's numerator: where each fixed Y's SFO is at any instant, the micronodes along every open edge, and its daily journal."],
+  "gdelt": ["GDELT day sources", "What GDELT was reading on a given day: the day's leading source URLs, from 2013-04-01."],
+  "gematria": ["H-Gematria/ASCII", "The two name-value programs in the browser: a full name as you type, or a list of any size to one CSV."],
+  "alien-corridor": ["Alien Corridor Support System", "The 3PP-NOAH84 / MDQNM engine and its GUI, running entirely in the browser."],
+};
+const url = k => k === "nth-member" ? "https://nth-member.github.io/" : `https://nth-member.github.io/${k}/`;
+const about = document.getElementById("about"), go = document.getElementById("go");
+
+function show(k) {
+  const [name, line] = SITES[k];
+  about.className = "";
+  about.innerHTML = "";
+  const b = document.createElement("strong"); b.textContent = name;
+  about.append(b, document.createElement("br"), line);
+  go.href = url(k); go.textContent = `Open ${name}`; go.hidden = false;
+}
+
+document.querySelectorAll('input[name="site"]').forEach(r => {
+  r.addEventListener("change", () => show(r.value));
+  r.addEventListener("keydown", e => { if (e.key === "Enter" && r.checked) location.href = url(r.value); });
+  r.closest("label").addEventListener("dblclick", () => { location.href = url(r.value); });
+});
+</script>
+</body>
+</html>

@@ -54,7 +54,7 @@ fieldset legend{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect
 .opt span{font-size:clamp(11px,2.3vmin,14px);font-weight:600;letter-spacing:.04em;line-height:1.25;
   background:var(--plane);padding:1px 6px;border-radius:6px}
 .opt:hover input{border-color:var(--muted)}
-/* the six points of a hexagon around the Ω: nth-member at the top, then clockwise */
+/* the six points of a hexagon around the Ω: nth-home at the top, then clockwise */
 .p0{left:50%;top:3%}
 .p1{left:87%;top:22%}
 .p2{left:87%;top:68%}
@@ -78,7 +78,7 @@ fieldset legend{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect
   <div class="omega" aria-hidden="true">Ω</div>
   <fieldset>
     <legend>Choose a site</legend>
-    <label class="opt p0"><input type="radio" name="site" value="nth-member"><span>NTH-MEMBER</span></label>
+    <label class="opt p0"><input type="radio" name="site" value="nth-member"><span>NTH-HOME</span></label>
     <label class="opt p1"><input type="radio" name="site" value="revott"><span>REVOTT</span></label>
     <label class="opt p2"><input type="radio" name="site" value="member"><span>THE NTH MEMBER</span></label>
     <label class="opt p3"><input type="radio" name="site" value="gdelt"><span>GDELT</span></label>
@@ -95,7 +95,7 @@ fieldset legend{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect
 <script>
 "use strict";
 const SITES = {
-  "nth-member": ["nth-member", "The nth-member organisation's own page: its five sites, listed."],
+  "nth-member": ["nth-home", "The nth-member organisation's own page: its five sites, listed."],
   "revott": ["REVOTT atop GDELT", "The field at every node of an instance: hold Y and read what GDELT carried on each of the 400 SFO-BB dates."],
   "member": ["The nth member", "REVOTT's numerator: where each fixed Y's SFO is at any instant, the micronodes along every open edge, and its daily journal."],
   "gdelt": ["GDELT day sources", "What GDELT was reading on a given day: the day's leading source URLs, from 2013-04-01."],

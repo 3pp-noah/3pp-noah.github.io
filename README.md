@@ -1,9 +1,10 @@
 # 3PP-NOAH
 
-**The nth-member sites from one place.** Served at https://3pp-noah.github.io/.
+**The nth-member sites and JOMO SFO-WAM from one place.** Served at https://3pp-noah.github.io/.
 
-`index.html` is the whole site: a large Ω with six radio buttons at the points of a hexagon around it —
-NTH-HOME (the nth-member page) at the top, then the five sites. Choosing one shows what it is and an **Open**
+`index.html` is the whole site: a large Ω with seven radio buttons around it —
+NTH-HOME (the nth-member page) at the top, then clockwise the five nth-member sites and JOMO SFO-WAM,
+which has its own home under the 3pp-noah organisation. Choosing one shows what it is and an **Open**
 button; Enter or a double-click opens it directly. No build step, no dependencies.
 
 | button | opens |
@@ -14,3 +15,4 @@ button; Enter or a double-click opens it directly. No build step, no dependencie
 | GDELT | https://nth-member.github.io/gdelt/ |
 | H-GEMATRIA/ASCII | https://nth-member.github.io/gematria/ |
 | ALIEN CORRIDOR | https://nth-member.github.io/alien-corridor/ |
+| JOMO SFO-WAM | https://3pp-noah.github.io/jomo-sfo-wam/ — repository 3pp-noah/jomo-sfo-wam |

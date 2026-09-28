@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>3PP-NOAH</title>
-<meta name="description" content="3PP-NOAH: the nth-member sites from one place.">
+<meta name="description" content="3PP-NOAH: the nth-member sites and JOMO SFO-WAM from one place.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ctext x='32' y='50' font-size='52' text-anchor='middle' font-family='Georgia,serif'%3E%CE%A9%3C/text%3E%3C/svg%3E">
 <style>
 :root{
@@ -54,13 +54,16 @@ fieldset legend{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect
 .opt span{font-size:clamp(11px,2.3vmin,14px);font-weight:600;letter-spacing:.04em;line-height:1.25;
   background:var(--plane);padding:1px 6px;border-radius:6px}
 .opt:hover input{border-color:var(--muted)}
-/* the six points of a hexagon around the Ω: nth-home at the top, then clockwise */
+.opt .nw{white-space:nowrap;padding:0}
+/* seven points around the Ω: nth-home at the top, then clockwise.
+   button k at angle −90° + 360°·k/7: left = 50 + 43·cos, top = 45.5 + 42.5·sin, left kept within 13–87 % */
 .p0{left:50%;top:3%}
-.p1{left:87%;top:22%}
-.p2{left:87%;top:68%}
-.p3{left:50%;top:88%}
-.p4{left:13%;top:68%}
-.p5{left:13%;top:22%}
+.p1{left:84%;top:19%}
+.p2{left:87%;top:55%}
+.p3{left:69%;top:84%}
+.p4{left:31%;top:84%}
+.p5{left:13%;top:55%}
+.p6{left:16%;top:19%}
 .panel{min-height:92px;max-width:520px;width:100%;text-align:center;margin-top:6px}
 .panel p{margin:0 0 10px;color:var(--ink-2)}
 .panel .hint{color:var(--muted);font-size:13px}
@@ -84,6 +87,7 @@ fieldset legend{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect
     <label class="opt p3"><input type="radio" name="site" value="gdelt"><span>GDELT</span></label>
     <label class="opt p4"><input type="radio" name="site" value="gematria"><span>H-GEMATRIA/ASCII</span></label>
     <label class="opt p5"><input type="radio" name="site" value="alien-corridor"><span>ALIEN CORRIDOR</span></label>
+    <label class="opt p6"><input type="radio" name="site" value="jomo-sfo-wam"><span>JOMO <span class="nw">SFO-WAM</span></span></label>
   </fieldset>
 </div>
 
@@ -101,8 +105,10 @@ const SITES = {
   "gdelt": ["GDELT day sources", "What GDELT was reading on a given day: the day's leading source URLs, from 2013-04-01."],
   "gematria": ["H-Gematria/ASCII", "The two name-value programs in the browser: a full name as you type, or a list of any size to one CSV."],
   "alien-corridor": ["Alien Corridor Support System", "The 3PP-NOAH84 / MDQNM engine and its GUI, running entirely in the browser."],
+  "jomo-sfo-wam": ["JOMO SFO-WAM", "The research-agent kernel: 790 agents on the invariant 399-node SFO-WAM, with its causal and research layers running in the browser.", "https://3pp-noah.github.io/jomo-sfo-wam/"],
 };
-const url = k => k === "nth-member" ? "https://nth-member.github.io/" : `https://nth-member.github.io/${k}/`;
+// An entry's third element is its own address; otherwise it is an nth-member site.
+const url = k => SITES[k][2] ?? (k === "nth-member" ? "https://nth-member.github.io/" : `https://nth-member.github.io/${k}/`);
 const about = document.getElementById("about"), go = document.getElementById("go");
 
 function show(k) {

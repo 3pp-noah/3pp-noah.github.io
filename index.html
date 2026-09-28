@@ -153,7 +153,7 @@ try {
   const units = await (await fetch("words/units.json")).json();
   const s = await randomSaying(units);
   document.getElementById("words-text").textContent = `“${s.text}”`;
-  document.getElementById("words-ref").textContent = s.ref;
+  document.getElementById("words-ref").textContent = `${s.ref} · RSV`;
   box.dataset.source = s.source; // which generator drew it, for inspection; not shown
   box.hidden = false;
 } catch (e) {

@@ -28,16 +28,33 @@
   --line:#2c2c2a; --axis:#383835; --accent:#3987e5;
 }
 *{box-sizing:border-box}
+[hidden]{display:none !important}
 html,body{height:100%}
 body{margin:0;background:var(--plane);color:var(--ink);
   font:15px/1.5 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  display:flex;flex-direction:column;align-items:center;justify-content:safe center;
   padding:max(16px,env(safe-area-inset-top)) 16px max(16px,env(safe-area-inset-bottom))}
 h1{margin:0 0 4px;font-size:clamp(20px,4.5vmin,30px);letter-spacing:.18em;font-weight:600}
-.dial{position:relative;width:min(92vw,78vh,640px);aspect-ratio:1;margin:8px 0 4px}
+.dial{--d:min(94vw,72vh,780px);position:relative;width:var(--d);aspect-ratio:1;margin:8px 0 4px}
 .omega{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;
-  font-family:Georgia,"Times New Roman",serif;font-size:calc(min(92vw,78vh,640px) * .62);line-height:1;
+  font-family:Georgia,"Times New Roman",serif;font-size:calc(var(--d) * .70);line-height:1;
   color:var(--ink);user-select:none;transform:translateY(-2%)}
+/* a verse of Christ's words inside the Ω; hover, focus or a tap opens it in full */
+.words{position:absolute;left:50%;top:41%;transform:translate(-50%,-50%);width:calc(var(--d) * .25);z-index:2;
+  margin:0;padding:6px 8px;border-radius:10px;border:1px solid transparent;text-align:center;cursor:default;
+  font-family:Georgia,"Times New Roman",serif;color:var(--ink);outline:none;
+  transition:width .2s,background-color .2s,box-shadow .2s,border-color .2s}
+.words blockquote{margin:0;font-style:italic;font-size:clamp(10px,1.75vmin,14px);line-height:1.35;
+  display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:5;line-clamp:5;overflow:hidden}
+.words figcaption{margin-top:4px;font:600 clamp(9px,1.4vmin,11px)/1.3 ui-sans-serif,system-ui,sans-serif;
+  letter-spacing:.06em;color:var(--muted)}
+.words .note{display:none;margin-top:6px;font:clamp(9px,1.3vmin,10px)/1.35 ui-sans-serif,system-ui,sans-serif;color:var(--muted)}
+.words:hover,.words:focus,.words.open{width:min(calc(var(--d) * .66),88vw);z-index:4;background:var(--surface);
+  border-color:var(--line);box-shadow:0 6px 28px rgba(0,0,0,.18);padding:14px 16px}
+.words:hover blockquote,.words:focus blockquote,.words.open blockquote{-webkit-line-clamp:unset;line-clamp:none;
+  font-size:clamp(14px,2.4vmin,19px);line-height:1.45}
+.words:hover .note,.words:focus .note,.words.open .note{display:block}
+.words:focus-visible{border-color:var(--accent)}
 .ring{position:absolute;inset:14%;border:1px solid var(--line);border-radius:50%;pointer-events:none}
 fieldset{border:0;margin:0;padding:0}
 fieldset legend{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
@@ -79,6 +96,11 @@ fieldset legend{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect
 <div class="dial">
   <div class="ring"></div>
   <div class="omega" aria-hidden="true">Ω</div>
+  <figure class="words" id="words" tabindex="0" hidden aria-label="A saying of Jesus Christ">
+    <blockquote id="words-text"></blockquote>
+    <figcaption id="words-ref"></figcaption>
+    <p class="note" id="words-note"></p>
+  </figure>
   <fieldset>
     <legend>Choose a site</legend>
     <label class="opt p0"><input type="radio" name="site" value="nth-member"><span>NTH-HOME</span></label>
@@ -125,6 +147,28 @@ document.querySelectorAll('input[name="site"]').forEach(r => {
   r.addEventListener("keydown", e => { if (e.key === "Enter" && r.checked) location.href = url(r.value); });
   r.closest("label").addEventListener("dblclick", () => { location.href = url(r.value); });
 });
+</script>
+<script type="module">
+// A new verse of Christ's words at each visit (words/words.js).
+import { randomSaying } from "./words/words.js";
+const box = document.getElementById("words");
+try {
+  const units = await (await fetch("words/units.json")).json();
+  const s = await randomSaying(units);
+  document.getElementById("words-text").textContent = `“${s.text}”`;
+  document.getElementById("words-ref").textContent = s.ref;
+  document.getElementById("words-note").textContent =
+    `Revised Standard Version, via the Bolls.life Bible API. Drawn at random by ${s.source}. ` +
+    "Scripture quotations are from the Revised Standard Version of the Bible, copyright © 1946, 1952, " +
+    "and 1971 the National Council of the Churches of Christ in the United States of America.";
+  box.hidden = false;
+} catch (e) {
+  console.warn("words:", e);
+}
+// Touch screens have no hover: a tap opens the verse, a tap elsewhere or Escape closes it.
+box.addEventListener("click", (e) => { e.stopPropagation(); box.classList.toggle("open"); });
+document.addEventListener("click", () => box.classList.remove("open"));
+document.addEventListener("keydown", (e) => { if (e.key === "Escape") { box.classList.remove("open"); box.blur(); } });
 </script>
 </body>
 </html>

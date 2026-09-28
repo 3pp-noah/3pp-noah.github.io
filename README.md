@@ -29,8 +29,8 @@ Revised Standard Version; hovering over it (or a tap, on a phone) shows it in fu
 | `words/build.mjs` | makes `units.json`: which quotations are Christ's comes from the red letters (`\wj`) of the World English Bible's USFM text |
 
 - **The draw is truly random:** the verse's number comes from random.org (atmospheric noise). If
-  random.org cannot be reached, the browser's cryptographic generator is used instead, and the
-  expanded verse says which source drew it.
+  random.org cannot be reached, the browser's cryptographic generator is used instead; the
+  verse's `data-source` attribute records which drew it.
 - **A new verse per visit:** each browser remembers the verses it has shown and draws among the
   others until all 2,050 have been seen.
 - **Coverage:** 2,031 of the WEB's 2,059 red-letter verses. The rest are verses the RSV omits,

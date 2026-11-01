@@ -121,13 +121,13 @@ fieldset legend{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect
 "use strict";
 const SITES = {
   "nth-member": ["NTH-HOME", "The nth-member organisation's own page: its five sites, listed."],
-  "revott": ["REVOTT atop GDELT", "The field at every node of an instance: hold Y and read what GDELT carried on each of the 400 SFO-BB dates."],
+  "revott": ["REVOTT atop GDELT", "The field at every node of an instance: hold Y and read what GDELT carried on each of the 401 SFO-BB dates."],
   "member": ["The nth member", "REVOTT's numerator: where each fixed Y's SFO is at any instant, the micronodes along every open edge, and its daily journal."],
   "revott-stamps": ["REVOTT stamps", "Feed items stamped onto a (Y, X) of REVOTT: each item whose instant, read from Nsukka on the Yg clock, lies within the variac's window of the pair's TNLDY."],
   "gdelt": ["GDELT day sources", "What GDELT was reading on a given day: the day's leading source URLs, from 2013-04-01."],
   "gematria": ["H-Gematria/ASCII", "The two name-value programs in the browser: a full name as you type, or a list of any size to one CSV."],
   "alien-corridor": ["Alien Corridor Support System", "The 3PP-NOAH84 / MDQNM engine and its GUI, running entirely in the browser."],
-  "jomo-sfo-wam": ["JOMO SFO-WAM", "The research-agent kernel: 790 agents on the invariant 399-node SFO-WAM, with its causal and research layers running in the browser.", "https://3pp-noah.github.io/jomo-sfo-wam/"],
+  "jomo-sfo-wam": ["JOMO SFO-WAM", "The research-agent kernel: 790 agents on the invariant 400-node SFO-WAM, with its causal and research layers running in the browser.", "https://3pp-noah.github.io/jomo-sfo-wam/"],
 };
 // An entry's third element is its own address; otherwise it is an nth-member site.
 const url = k => SITES[k][2] ?? (k === "nth-member" ? "https://nth-member.github.io/" : `https://nth-member.github.io/${k}/`);

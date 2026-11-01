@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>3PP-NOAH</title>
-<meta name="description" content="3PP-NOAH: the nth-member sites and JOMO SFO-WAM from one place.">
+<meta name="description" content="3PP-NOAH: the nth-member sites, REVOTT stamps and JOMO SFO-WAM from one place.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ctext x='32' y='50' font-size='52' text-anchor='middle' font-family='Georgia,serif'%3E%CE%A9%3C/text%3E%3C/svg%3E">
 <style>
 :root{
@@ -70,15 +70,16 @@ fieldset legend{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect
   background:var(--plane);padding:1px 6px;border-radius:6px}
 .opt:hover input{border-color:var(--muted)}
 .opt .nw{white-space:nowrap;padding:0}
-/* seven points around the Ω: nth-home at the top, then clockwise.
-   button k at angle −90° + 360°·k/7: left = 50 + 43·cos, top = 45.5 + 42.5·sin, left kept within 13–87 % */
+/* eight points around the Ω: nth-home at the top, then clockwise.
+   button k at angle −90° + 360°·k/8: left = 50 + 43·cos, top = 45.5 + 42.5·sin, left kept within 13–87 % */
 .p0{left:50%;top:3%}
-.p1{left:84%;top:19%}
-.p2{left:87%;top:55%}
-.p3{left:69%;top:84%}
-.p4{left:31%;top:84%}
-.p5{left:13%;top:55%}
-.p6{left:16%;top:19%}
+.p1{left:80%;top:15%}
+.p2{left:87%;top:46%}
+.p3{left:80%;top:76%}
+.p4{left:50%;top:88%}
+.p5{left:20%;top:76%}
+.p6{left:13%;top:46%}
+.p7{left:20%;top:15%}
 .panel{min-height:92px;max-width:520px;width:100%;text-align:center;margin-top:6px}
 .panel p{margin:0 0 10px;color:var(--ink-2)}
 .panel .hint{color:var(--muted);font-size:13px}
@@ -103,10 +104,11 @@ fieldset legend{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect
     <label class="opt p0"><input type="radio" name="site" value="nth-member"><span>NTH-HOME</span></label>
     <label class="opt p1"><input type="radio" name="site" value="revott"><span>REVOTT</span></label>
     <label class="opt p2"><input type="radio" name="site" value="member"><span>THE NTH MEMBER</span></label>
-    <label class="opt p3"><input type="radio" name="site" value="gdelt"><span>GDELT</span></label>
-    <label class="opt p4"><input type="radio" name="site" value="gematria"><span>H-GEMATRIA/ASCII</span></label>
-    <label class="opt p5"><input type="radio" name="site" value="alien-corridor"><span>ALIEN CORRIDOR</span></label>
-    <label class="opt p6"><input type="radio" name="site" value="jomo-sfo-wam"><span>JOMO <span class="nw">SFO-WAM</span></span></label>
+    <label class="opt p3"><input type="radio" name="site" value="revott-stamps"><span>REVOTT STAMPS</span></label>
+    <label class="opt p4"><input type="radio" name="site" value="gdelt"><span>GDELT</span></label>
+    <label class="opt p5"><input type="radio" name="site" value="gematria"><span>H-GEMATRIA/ASCII</span></label>
+    <label class="opt p6"><input type="radio" name="site" value="alien-corridor"><span>ALIEN CORRIDOR</span></label>
+    <label class="opt p7"><input type="radio" name="site" value="jomo-sfo-wam"><span>JOMO <span class="nw">SFO-WAM</span></span></label>
   </fieldset>
 </div>
 
@@ -121,6 +123,7 @@ const SITES = {
   "nth-member": ["NTH-HOME", "The nth-member organisation's own page: its five sites, listed."],
   "revott": ["REVOTT atop GDELT", "The field at every node of an instance: hold Y and read what GDELT carried on each of the 400 SFO-BB dates."],
   "member": ["The nth member", "REVOTT's numerator: where each fixed Y's SFO is at any instant, the micronodes along every open edge, and its daily journal."],
+  "revott-stamps": ["REVOTT stamps", "Feed items stamped onto a (Y, X) of REVOTT: each item whose instant, read from Nsukka on the Yg clock, lies within the variac's window of the pair's TNLDY."],
   "gdelt": ["GDELT day sources", "What GDELT was reading on a given day: the day's leading source URLs, from 2013-04-01."],
   "gematria": ["H-Gematria/ASCII", "The two name-value programs in the browser: a full name as you type, or a list of any size to one CSV."],
   "alien-corridor": ["Alien Corridor Support System", "The 3PP-NOAH84 / MDQNM engine and its GUI, running entirely in the browser."],

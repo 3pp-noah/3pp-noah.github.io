@@ -522,6 +522,7 @@ async function openNote() {
   }
 }
 const when = (x) => new Date(x).toLocaleString(undefined, { dateStyle: "medium", timeStyle: "short" });
+const lastSent = () => { try { return +(localStorage.getItem("usage.sent") || 0); } catch { return 0; } };
 async function counts() {
   try {
     const d = await db();
@@ -541,8 +542,7 @@ async function download() {
 async function status() {
   if (!cfg) return card("Usage recorder", [`This browser is not recording on ${location.host}.`], [["Close", null, true]]);
   const [q, s] = await counts();
-  let last = 0;
-  try { last = +(localStorage.getItem("usage.sent") || 0); } catch { /* blocked */ }
+  const last = lastSent();
   const v = await card("Usage recorder", [
     `This browser records on ${location.host} as “${cfg.dev}”, since ${when(cfg.since)}.`,
     `Waiting to be sent: ${q}. Last sent: ${last ? when(last) : "not yet"}.`,
@@ -572,11 +572,14 @@ async function enrol(n, h) {
   cfg = next;
   navigator.storage?.persist?.().catch(() => {});
   start();
+  const before = lastSent();
   log("enrol", { dev: cfg.dev, rv: RV });
   await flush();
+  const went = lastSent() > before;
   const other = OTHER && new URL(OTHER).host;
   const more = await card("Usage recorder", [
-    `Recording here as “${cfg.dev}”. A first record has been sent; it should be in the Sheet within a minute.`,
+    `Recording here as “${cfg.dev}”. ` + (went ? "A first record has been sent; it should be in the Sheet within a minute."
+      : "Its first record could not be sent yet: it waits here and goes when the page next reaches Google."),
     para(other ? `${other} is enrolled on its own, with the same settings.` : "Each domain is enrolled on its own.", "muted"),
   ], other ? [["Close", null], [`Enrol ${other} too`, "other", true]] : [["Close", null, true]]);
   if (more === "other") location.href = OTHER + h;

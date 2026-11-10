@@ -77,7 +77,7 @@ function fieldLabel(el) {
 function describe(el) { // which element: never what was typed into it
   if (!(el instanceof Element)) return { tag: "?" };
   const d = { tag: el.localName }, a = (n) => el.getAttribute(n);
-  if (el.id) d.id = clip(el.id, 60);
+  if (el.id) d.eid = clip(el.id, 60);
   for (const n of ["role", "name", "type"]) if (a(n)) d[n] = clip(a(n), 40);
   const cls = typeof el.className === "string" ? squash(el.className).split(" ").slice(0, 2).join(" ") : "";
   if (cls) d.cls = clip(cls, 60);
@@ -155,7 +155,8 @@ function store(recs, fresh = true) {
 }
 function log(k, f = {}) {
   if (!cfg) return null;
-  const r = { id: newId(), t: new Date().toISOString(), k, pv, p: location.pathname, ...f };
+  const r = { id: newId(), t: new Date().toISOString(), k, pv, p: location.pathname };
+  for (const [key, v] of Object.entries(f)) if (!(key in r)) r[key] = v; // never over the record's own fields
   pending.set(r.id, r);
   store([r]);
   soon();

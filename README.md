@@ -41,6 +41,16 @@ Revised Standard Version; hovering over it (or a tap, on a phone) shows it in fu
 Scripture quotations are from the Revised Standard Version of the Bible, copyright © 1946, 1952,
 and 1971 the National Council of the Churches of Christ in the United States of America.
 
+## usage.js
+
+Every page of 3pp-noah.github.io and nth-member.github.io loads `usage.js`, the owner's usage
+recorder. **For a visitor it does nothing:** unless the owner has enrolled that browser, it stores,
+sends and changes nothing. In an enrolled browser it records how the pages are used — pages opened,
+controls used, the values of choices, numbers and searches (other typed text only as a length, and
+nothing typed or shown on the gematria page), time on the page, errors — and sends the records to the
+owner's private Google Sheet, so that the sites' revamp follows their actual use. No records are kept
+in this repository.
+
 ## Refreshing the sites
 
 One command, on the computer that keeps the sites, refreshes every 3PP-NOAH site whose data changes: JOMO

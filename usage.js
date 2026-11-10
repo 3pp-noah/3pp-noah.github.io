@@ -553,7 +553,9 @@ async function status() {
   if (v === "dl") { await download(); return status(); }
   if (v === "off") return turnOff();
 }
-async function enrol(n) {
+const OTHER = { "3pp-noah.github.io": "https://nth-member.github.io/", "nth-member.github.io": "https://3pp-noah.github.io/",
+  "127.0.0.1:8701": "http://127.0.0.1:8702/", "127.0.0.1:8702": "http://127.0.0.1:8701/" }[location.host]; // the other domain (test stand-ins too)
+async function enrol(n, h) {
   if (cfg && cfg.dev === n.dev && cfg.e === n.e && (cfg.f ?? cfg.u) === (n.f ?? n.u)) return status();
   const v = await card("Usage recorder", [
     cfg ? `This browser already records here as “${cfg.dev}”. Replace that with the following?` : `Record your use of the pages on ${location.host} in this browser?`,
@@ -572,10 +574,12 @@ async function enrol(n) {
   start();
   log("enrol", { dev: cfg.dev, rv: RV });
   await flush();
-  await card("Usage recorder", [
+  const other = OTHER && new URL(OTHER).host;
+  const more = await card("Usage recorder", [
     `Recording here as “${cfg.dev}”. A first record has been sent; it should be in the Sheet within a minute.`,
-    para("Each domain is enrolled on its own: open the other domain’s link in this browser too.", "muted"),
-  ], [["Close", null, true]]);
+    para(other ? `${other} is enrolled on its own, with the same settings.` : "Each domain is enrolled on its own.", "muted"),
+  ], other ? [["Close", null], [`Enrol ${other} too`, "other", true]] : [["Close", null, true]]);
+  if (more === "other") location.href = OTHER + h;
 }
 async function turnOff() {
   const v = await card("Usage recorder", [`Stop recording in this browser on ${location.host}, and delete the records it keeps here?`,
@@ -587,8 +591,8 @@ async function turnOff() {
 }
 function obey(h) {
   let m;
-  if ((m = /^#usage=on\.([\w-]{20,200})\.(\d{3,15})\.([a-z0-9-]{1,24})$/i.exec(h))) return enrol({ f: m[1], e: m[2], dev: m[3].toLowerCase() });
-  if (LOCAL && (m = /^#usage=test\.([^.]+)\.(\d{1,15})\.([a-z0-9-]{1,24})$/i.exec(h))) return enrol({ u: decode(m[1]), e: m[2], dev: m[3].toLowerCase() });
+  if ((m = /^#usage=on\.([\w-]{20,200})\.(\d{3,15})\.([a-z0-9-]{1,24})$/i.exec(h))) return enrol({ f: m[1], e: m[2], dev: m[3].toLowerCase() }, h);
+  if (LOCAL && (m = /^#usage=test\.([^.]+)\.(\d{1,15})\.([a-z0-9-]{1,24})$/i.exec(h))) return enrol({ u: decode(m[1]), e: m[2], dev: m[3].toLowerCase() }, h);
   if (h === "#usage=off") return turnOff();
   return status();
 }

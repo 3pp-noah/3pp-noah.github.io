@@ -65,7 +65,7 @@ function ownText(root) { // the visible words of an element, not of fields insid
   const w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
     acceptNode: (n) => n.parentElement?.closest("select,textarea,option,script,style,usage-recorder") ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT,
   });
-  while (s.length < 120 && w.nextNode()) s += " " + w.currentNode.data;
+  while (s.length < 120 && w.nextNode()) s += (w.currentNode.previousSibling?.localName === "wbr" ? "" : " ") + w.currentNode.data; // a <wbr> is no space
   return squash(s);
 }
 const FIELD = "input,select,textarea";

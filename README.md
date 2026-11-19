@@ -52,6 +52,9 @@ Four clocks run at the corners of the page, all four read at one instant, ten ti
   covers the dial or its buttons.
 - `clocks.js` holds the definitions and the reading. It also loads under Node
   (`require("./clocks.js")`), for checking.
+- `index.html` loads `clocks.js` and `nsukka-yg-clock.js` with `?v=` and the first 8 hex digits of the
+  file's SHA-256 (`sha256sum clocks.js | cut -c1-8`). Change it whenever the file changes: a browser keeps
+  a script for up to 10 minutes and a refresh does not fetch it again, but a new address it fetches at once.
 
 ## The words inside the Ω
 

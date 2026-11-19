@@ -244,10 +244,11 @@ function checkNav(by) {
   lastHref = location.href;
   if (!location.hash.startsWith("#usage")) log("nav", { ...where(true), by });
 }
-function watch(id) { // a click after which nothing on the page changed for a second
+function watch(id) { // a click after which nothing on the page changed for a second (a clock's ticks aside)
   const href = location.href;
   let changed = false;
-  const ours = (m) => own(m.target) || (m.type === "childList" && [...m.addedNodes, ...m.removedNodes].every((n) => n.localName === "usage-recorder"));
+  const ticks = (m) => !!(m.target.nodeType === 1 ? m.target : m.target.parentElement)?.closest?.('[role="timer"]');
+  const ours = (m) => own(m.target) || ticks(m) || (m.type === "childList" && [...m.addedNodes, ...m.removedNodes].every((n) => n.localName === "usage-recorder"));
   const mo = new MutationObserver((ms) => {
     if (ms.some((m) => !ours(m) && (m.type !== "attributes" || m.oldValue !== m.target.getAttribute(m.attributeName)))) { changed = true; mo.disconnect(); }
   });

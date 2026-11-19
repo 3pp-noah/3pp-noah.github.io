@@ -22,26 +22,31 @@ directly. No build step, no dependencies.
 
 ## The clocks at the corners
 
-Four clocks run at the corners of the page, all four read at one instant, ten times a second:
+Four clocks run at the corners of the page, all read at one instant, ten times a second:
 
 | corner | clock | reading | it reads 0 at (Nsukka) |
 |---|---|---|---|
 | top left | **TNLDY** | TNLDY, read from Nsukka on the Yg clock | |
 | top right | **EXE_TPDP.100D** | (TNLDY − 17651.8) / 100 | 2018-03-07 03:32:52.174 |
+| top right, pressed | **EXE_CDOWN.100D** | (TNLDY − 25931.8) / 100 | 2040-11-06 08:45:54.783 |
 | bottom left | **END_IE_PURPOSE.100D**, aka GOG_ID.100D | (TNLDY − 22440) / 100 | 2031-04-16 12:31:18.261 |
 | bottom left, pressed | **AGAIN_BORN_CIRCUMSPECTION.100D** | (TNLDY − 22692) / 100 | 2031-12-24 07:18:15.652 |
 | bottom right | **DNPS.100D** | (TNLDY − 33·17640/48.3) / 100 | 2002-11-06 00:00:00.000 |
+| bottom right, pressed | **ARM_CDOWN.100D** | (TNLDY − 26414.8) / 100 | 2042-03-04 22:19:49.565 |
 
 - **TNLDY** comes from `nsukka-yg-clock.js`, a byte-identical copy of the Nsukka/Yg clock that every
   other 3PP-NOAH site uses: the Yg year (17640/48.3 days) laid on Nsukka's calendar from 1 December and
   recalibrated there each year, so that on 1 December all four clocks step together (+5/23 day on
   2026-12-01).
-- **The 100-day clocks are the MDQNM engine's own.** Their Ztp values are the engine's (`EXE_TPDP.100D`,
+- **Five of the 100-day clocks are the MDQNM engine's own.** Their Ztp values are the engine's (`EXE_TPDP.100D`,
   `GOGID.100D` = `END_IE_PURPOSE_BIRTH.100D` and `END_IE_PURPOSE_CIRCUMSPECTION.100D` in `crf0`;
   `DNPS12052.100D` in `sfo16`). 17651.8, 22440 and 22692 are 14160 + 100·Y for REVOTT's Y = 34.918,
   82.80 and 85.32; DNPS.100D's Ztp is 33 Yg exactly, 277200/23 = 12052.173913… .
-- **The bottom-left clock is a button:** pressing it switches between END_IE_PURPOSE.100D and
-  AGAIN_BORN_CIRCUMSPECTION.100D. Each visit starts with END_IE_PURPOSE.100D.
+- **Two are the author's countdowns** (2026-11-19): EXE_CDOWN.100D, Ztp 25931.8, and ARM_CDOWN.100D,
+  Ztp 26414.8. Like every 100-day clock they read (TNLDY − Ztp)/100, rising through negative values to 0.
+- **Three corners are buttons.** Pressing one switches it between its two clocks: top right EXE_TPDP.100D
+  and EXE_CDOWN.100D, bottom left END_IE_PURPOSE.100D and AGAIN_BORN_CIRCUMSPECTION.100D, bottom right
+  DNPS.100D and ARM_CDOWN.100D. Each visit starts with the first of each pair.
 - **Precision.** TNLDY is shown to 6 decimals and a 100-day clock to 8: the same step, 86.4 ms, on every
   clock. The readings are exact (integer arithmetic over the clock's own denominator, 23·86 400 000) and
   are shown floored, as a clock shows the tick it has reached. Each clock's tooltip gives its formula

@@ -1,15 +1,18 @@
 /* The four clocks at the corners of the 3PP-NOAH page.
 
-   TNLDY is read from Nsukka on the Yg clock (nsukka-yg-clock.js). The other three are 100-day clocks of the MDQNM
-   engine, each reading (TNLDY - Ztp) / 100:
+   TNLDY is read from Nsukka on the Yg clock (nsukka-yg-clock.js). The others are 100-day clocks, each reading
+   (TNLDY - Ztp) / 100: five of the MDQNM engine's and two countdowns of the author's.
 
      EXE_TPDP.100D                         Ztp 17651.8  = 14160 + 100·34.918, REVOTT's EXE_TPDP slice (crf0 "on EXE_TPDP.100D")
      END_IE_PURPOSE.100D, aka GOG_ID.100D  Ztp 22440    = 14160 + 100·82.80 (crf0 "on GOGID.100D", "on END_IE_PURPOSE_BIRTH.100D")
      AGAIN_BORN_CIRCUMSPECTION.100D        Ztp 22692    = 14160 + 100·85.32 (sfo08 *again-born-ie-born-of-the-spirit-is-the-
                                                           end-ie-purpose-of-all-things-circumspection100d*)
      DNPS.100D                             Ztp 33 Yg    = 33·17640/48.3 (sfo16 "on DNPS12052.100D")
+     EXE_CDOWN.100D                        Ztp 25931.8  the author's countdown (2026-11-19)
+     ARM_CDOWN.100D                        Ztp 26414.8  the author's countdown (2026-11-19)
 
-   The bottom-left clock switches between END_IE_PURPOSE.100D and AGAIN_BORN_CIRCUMSPECTION.100D when pressed.
+   Three corners are buttons that switch between two clocks: top right EXE_TPDP.100D and EXE_CDOWN.100D, bottom
+   left END_IE_PURPOSE.100D and AGAIN_BORN_CIRCUMSPECTION.100D, bottom right DNPS.100D and ARM_CDOWN.100D.
 
    Readings are exact: Z is an integer numerator over 23·86 400 000 (zOf().num), so each reading is a ratio of
    BigInts, shown floored, as a clock shows the tick it has reached: TNLDY to 6 places and a 100-day clock to 8,
@@ -34,6 +37,8 @@
     end: { name: "END_IE_PURPOSE.100D", aka: "GOG_ID.100D", ztp: Yg.frac("22440"), ztpText: "22440" },
     circ: { name: "AGAIN_BORN_CIRCUMSPECTION.100D", ztp: Yg.frac("22692"), ztpText: "22692" },
     dnps: { name: "DNPS.100D", ztp: [33n * BigInt(Yg.YG_NUM), BigInt(Yg.YG_DEN)], ztpText: "33·17640/48.3" },
+    execd: { name: "EXE_CDOWN.100D", ztp: Yg.frac("25931.8"), ztpText: "25931.8" },
+    armcd: { name: "ARM_CDOWN.100D", ztp: Yg.frac("26414.8"), ztpText: "26414.8" },
   };
   for (const c of Object.values(CLOCKS)) {
     if (c.unit === undefined) c.unit = 100n;
@@ -45,27 +50,28 @@
   /* Every instant (epoch ms) at which a clock reads 0. */
   const zeros = c => Yg.instantsOfFrac(c.ztp[0], c.ztp[1]);
 
-  const api = { CLOCKS, fixed, read, zeros };
+  /* The corners that switch, each between its two clocks; every visit starts on the first. */
+  const PAIRS = { tr: [CLOCKS.exe, CLOCKS.execd], bl: [CLOCKS.end, CLOCKS.circ], br: [CLOCKS.dnps, CLOCKS.armcd] };
+
+  const api = { CLOCKS, PAIRS, fixed, read, zeros };
   root.HubClocks = api;
   if (typeof module === "object" && module && module.exports) module.exports = api;
   if (typeof document === "undefined") return;
 
-  // ---- the page: #clock-tl, #clock-tr, #clock-bl (a button) and #clock-br, each with .name, .value and .detail
+  // ---- the page: #clock-tl, and the buttons #clock-tr, #clock-bl and #clock-br, each with .name, .value and .detail
   const $ = id => document.getElementById(id);
   const box = { tl: $("clock-tl"), tr: $("clock-tr"), bl: $("clock-bl"), br: $("clock-br") };
   if (!box.tl || !box.tr || !box.bl || !box.br) return;
   const all = [box.tl, box.tr, box.bl, box.br];
   const part = (el, cls) => el.querySelector("." + cls);
-  let bl = CLOCKS.end;
+  const shown = { tr: 0, bl: 0, br: 0 }, cur = k => PAIRS[k][shown[k]];
 
   function describe(el, c) {
     const name = part(el, "name");
     name.textContent = "";
-    let from = 0;                                                    // a long name may break after its last "_"
-    if (c.name.length > 16) {                                        // and before its suffix (".100D")
-      for (const at of [c.name.lastIndexOf("_") + 1, c.name.lastIndexOf(".")].filter(i => i > 0).sort((a, b) => a - b)) {
-        if (at > from) { name.append(c.name.slice(from, at), document.createElement("wbr")); from = at; }
-      }
+    let from = 0;                                  // where a name is too wide, it breaks after its last "_" or before ".100D"
+    for (const at of [c.name.lastIndexOf("_") + 1, c.name.lastIndexOf(".")].filter(i => i > 0).sort((a, b) => a - b)) {
+      if (at > from) { name.append(c.name.slice(from, at), document.createElement("wbr")); from = at; }
     }
     name.append(c.name.slice(from));
     const zero = zeros(c).map(ms => Yg.nsukka(ms)).join(" and ");
@@ -74,14 +80,14 @@
     part(el, "detail").textContent = (c.aka ? "aka " + c.aka + " · " : "") + "Ztp " + ztp;
     el.title = `${c.name}${c.aka ? " (" + c.aka + ")" : ""} = (TNLDY − ${c.ztpText}) / 100; it reads 0 at ${zero} Nsukka`;
   }
-  function showBl() {
-    describe(box.bl, bl);
+  function show(k) {
+    const el = box[k];
+    describe(el, cur(k));
     const swap = document.createElement("span");
     swap.className = "swap"; swap.setAttribute("aria-hidden", "true"); swap.textContent = "⇄";
-    part(box.bl, "name").append(swap);
-    const other = bl === CLOCKS.end ? CLOCKS.circ : CLOCKS.end;
-    box.bl.title += `. Press to show ${other.name}.`;
-    box.bl.setAttribute("aria-pressed", String(bl === CLOCKS.circ));
+    part(el, "name").append(swap);
+    el.title += `. Press to show ${PAIRS[k][1 - shown[k]].name}.`;
+    el.setAttribute("aria-pressed", String(shown[k] === 1));
   }
 
   const value = Object.fromEntries(Object.entries(box).map(([k, el]) => [k, part(el, "value")]));
@@ -90,9 +96,7 @@
   function render() {
     const now = Date.now(), num = Yg.zOf(now).num;                // one instant for all four
     value.tl.textContent = read(CLOCKS.tnldy, num);
-    value.tr.textContent = read(CLOCKS.exe, num);
-    value.bl.textContent = read(bl, num);
-    value.br.textContent = read(CLOCKS.dnps, num);
+    for (const k of Object.keys(PAIRS)) value[k].textContent = read(cur(k), num);
     nsukka.textContent = "Nsukka " + Yg.nsukka(now).slice(0, 19);
     if (now >= recal) {
       const r = Yg.nextRecalibration(now);
@@ -128,10 +132,10 @@
   }
   const soon = () => { if (!pending) pending = requestAnimationFrame(place); };
 
-  box.bl.addEventListener("click", () => { bl = bl === CLOCKS.end ? CLOCKS.circ : CLOCKS.end; showBl(); render(); });
-  describe(box.tr, CLOCKS.exe);
-  showBl();
-  describe(box.br, CLOCKS.dnps);
+  for (const k of Object.keys(PAIRS)) {
+    box[k].addEventListener("click", () => { shown[k] = 1 - shown[k]; show(k); render(); });
+    show(k);
+  }
   render();
   all.forEach(el => { el.hidden = false; });
   place();

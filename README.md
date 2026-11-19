@@ -28,7 +28,7 @@ Four clocks run at the corners of the page, all four read at one instant, ten ti
 |---|---|---|---|
 | top left | **TNLDY** | TNLDY, read from Nsukka on the Yg clock | |
 | top right | **EXE_TPDP.100D** | (TNLDY − 17651.8) / 100 | 2018-03-07 03:32:52.174 |
-| bottom left | **AGAIN_BORN.100D**, aka GOG_ID.100D | (TNLDY − 22440) / 100 | 2031-04-16 12:31:18.261 |
+| bottom left | **END_IE_PURPOSE.100D**, aka GOG_ID.100D | (TNLDY − 22440) / 100 | 2031-04-16 12:31:18.261 |
 | bottom left, pressed | **AGAIN_BORN_CIRCUMSPECTION.100D** | (TNLDY − 22692) / 100 | 2031-12-24 07:18:15.652 |
 | bottom right | **DNPS.100D** | (TNLDY − 33·17640/48.3) / 100 | 2002-11-06 00:00:00.000 |
 
@@ -40,8 +40,8 @@ Four clocks run at the corners of the page, all four read at one instant, ten ti
   `GOGID.100D` = `END_IE_PURPOSE_BIRTH.100D` and `END_IE_PURPOSE_CIRCUMSPECTION.100D` in `crf0`;
   `DNPS12052.100D` in `sfo16`). 17651.8, 22440 and 22692 are 14160 + 100·Y for REVOTT's Y = 34.918,
   82.80 and 85.32; DNPS.100D's Ztp is 33 Yg exactly, 277200/23 = 12052.173913… .
-- **The bottom-left clock is a button:** pressing it switches between AGAIN_BORN.100D and
-  AGAIN_BORN_CIRCUMSPECTION.100D. Each visit starts with AGAIN_BORN.100D.
+- **The bottom-left clock is a button:** pressing it switches between END_IE_PURPOSE.100D and
+  AGAIN_BORN_CIRCUMSPECTION.100D. Each visit starts with END_IE_PURPOSE.100D.
 - **Precision.** TNLDY is shown to 6 decimals and a 100-day clock to 8: the same step, 86.4 ms, on every
   clock. The readings are exact (integer arithmetic over the clock's own denominator, 23·86 400 000) and
   are shown floored, as a clock shows the tick it has reached. Each clock's tooltip gives its formula

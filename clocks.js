@@ -3,13 +3,13 @@
    TNLDY is read from Nsukka on the Yg clock (nsukka-yg-clock.js). The other three are 100-day clocks of the MDQNM
    engine, each reading (TNLDY - Ztp) / 100:
 
-     EXE_TPDP.100D                     Ztp 17651.8  = 14160 + 100·34.918, REVOTT's EXE_TPDP slice (crf0 "on EXE_TPDP.100D")
-     AGAIN_BORN.100D, aka GOG_ID.100D  Ztp 22440    = 14160 + 100·82.80 (crf0 "on GOGID.100D", "on END_IE_PURPOSE_BIRTH.100D")
-     AGAIN_BORN_CIRCUMSPECTION.100D    Ztp 22692    = 14160 + 100·85.32 (sfo08 *again-born-ie-born-of-the-spirit-is-the-end-
-                                                      ie-purpose-of-all-things-circumspection100d*)
-     DNPS.100D                         Ztp 33 Yg    = 33·17640/48.3 (sfo16 "on DNPS12052.100D")
+     EXE_TPDP.100D                         Ztp 17651.8  = 14160 + 100·34.918, REVOTT's EXE_TPDP slice (crf0 "on EXE_TPDP.100D")
+     END_IE_PURPOSE.100D, aka GOG_ID.100D  Ztp 22440    = 14160 + 100·82.80 (crf0 "on GOGID.100D", "on END_IE_PURPOSE_BIRTH.100D")
+     AGAIN_BORN_CIRCUMSPECTION.100D        Ztp 22692    = 14160 + 100·85.32 (sfo08 *again-born-ie-born-of-the-spirit-is-the-
+                                                          end-ie-purpose-of-all-things-circumspection100d*)
+     DNPS.100D                             Ztp 33 Yg    = 33·17640/48.3 (sfo16 "on DNPS12052.100D")
 
-   The bottom-left clock switches between AGAIN_BORN.100D and AGAIN_BORN_CIRCUMSPECTION.100D when pressed.
+   The bottom-left clock switches between END_IE_PURPOSE.100D and AGAIN_BORN_CIRCUMSPECTION.100D when pressed.
 
    Readings are exact: Z is an integer numerator over 23·86 400 000 (zOf().num), so each reading is a ratio of
    BigInts, shown floored, as a clock shows the tick it has reached: TNLDY to 6 places and a 100-day clock to 8,
@@ -31,7 +31,7 @@
   const CLOCKS = {
     tnldy: { name: "TNLDY", ztp: [0n, 1n], unit: 1n, places: 6 },
     exe: { name: "EXE_TPDP.100D", ztp: Yg.frac("17651.8"), ztpText: "17651.8" },
-    born: { name: "AGAIN_BORN.100D", aka: "GOG_ID.100D", ztp: Yg.frac("22440"), ztpText: "22440" },
+    end: { name: "END_IE_PURPOSE.100D", aka: "GOG_ID.100D", ztp: Yg.frac("22440"), ztpText: "22440" },
     circ: { name: "AGAIN_BORN_CIRCUMSPECTION.100D", ztp: Yg.frac("22692"), ztpText: "22692" },
     dnps: { name: "DNPS.100D", ztp: [33n * BigInt(Yg.YG_NUM), BigInt(Yg.YG_DEN)], ztpText: "33·17640/48.3" },
   };
@@ -56,15 +56,18 @@
   if (!box.tl || !box.tr || !box.bl || !box.br) return;
   const all = [box.tl, box.tr, box.bl, box.br];
   const part = (el, cls) => el.querySelector("." + cls);
-  let bl = CLOCKS.born;
+  let bl = CLOCKS.end;
 
   function describe(el, c) {
-    const name = part(el, "name"), cut = c.name.lastIndexOf("_") + 1;
-    name.textContent = c.name;
-    if (c.name.length > 20 && cut) {                               // a long name may break after its last "_"
-      name.textContent = c.name.slice(0, cut);
-      name.append(document.createElement("wbr"), c.name.slice(cut));
+    const name = part(el, "name");
+    name.textContent = "";
+    let from = 0;                                                    // a long name may break after its last "_"
+    if (c.name.length > 16) {                                        // and before its suffix (".100D")
+      for (const at of [c.name.lastIndexOf("_") + 1, c.name.lastIndexOf(".")].filter(i => i > 0).sort((a, b) => a - b)) {
+        if (at > from) { name.append(c.name.slice(from, at), document.createElement("wbr")); from = at; }
+      }
     }
+    name.append(c.name.slice(from));
     const zero = zeros(c).map(ms => Yg.nsukka(ms)).join(" and ");
     let ztp = c.ztpText;
     if (c === CLOCKS.dnps) ztp = "33 Yg = " + fixed(c.ztp[0], c.ztp[1], 6) + "…";
@@ -76,7 +79,7 @@
     const swap = document.createElement("span");
     swap.className = "swap"; swap.setAttribute("aria-hidden", "true"); swap.textContent = "⇄";
     part(box.bl, "name").append(swap);
-    const other = bl === CLOCKS.born ? CLOCKS.circ : CLOCKS.born;
+    const other = bl === CLOCKS.end ? CLOCKS.circ : CLOCKS.end;
     box.bl.title += `. Press to show ${other.name}.`;
     box.bl.setAttribute("aria-pressed", String(bl === CLOCKS.circ));
   }
@@ -125,7 +128,7 @@
   }
   const soon = () => { if (!pending) pending = requestAnimationFrame(place); };
 
-  box.bl.addEventListener("click", () => { bl = bl === CLOCKS.born ? CLOCKS.circ : CLOCKS.born; showBl(); render(); });
+  box.bl.addEventListener("click", () => { bl = bl === CLOCKS.end ? CLOCKS.circ : CLOCKS.end; showBl(); render(); });
   describe(box.tr, CLOCKS.exe);
   showBl();
   describe(box.br, CLOCKS.dnps);

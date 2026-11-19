@@ -2,10 +2,11 @@
 
 **The nth-member sites, REVOTT stamps, SOLID STAMP and JOMO SFO-WAM from one place.** Served at https://3pp-noah.github.io/.
 
-`index.html` is the whole site: a large Ω with nine radio buttons around it —
+`index.html` is the page: a large Ω with nine radio buttons around it —
 NTH-HOME (the nth-member page) at the top, then clockwise the nth-member sites and JOMO SFO-WAM,
-which has its own home under the 3pp-noah organisation. Choosing one shows what it is and an **Open**
-button; Enter or a double-click opens it directly. No build step, no dependencies.
+which has its own home under the 3pp-noah organisation — and four clocks at its corners (below).
+Choosing a button shows what the site is and an **Open** button; Enter or a double-click opens it
+directly. No build step, no dependencies.
 
 | button | opens |
 |---|---|
@@ -18,6 +19,39 @@ button; Enter or a double-click opens it directly. No build step, no dependencie
 | H-GEMATRIA/ASCII | https://nth-member.github.io/gematria/ |
 | ALIEN CORRIDOR | https://nth-member.github.io/alien-corridor/ |
 | JOMO SFO-WAM | https://3pp-noah.github.io/jomo-sfo-wam/ — repository 3pp-noah/jomo-sfo-wam |
+
+## The clocks at the corners
+
+Four clocks run at the corners of the page, all four read at one instant, ten times a second:
+
+| corner | clock | reading | it reads 0 at (Nsukka) |
+|---|---|---|---|
+| top left | **TNLDY** | TNLDY, read from Nsukka on the Yg clock | |
+| top right | **EXE_TPDP.100D** | (TNLDY − 17651.8) / 100 | 2018-03-07 03:32:52.174 |
+| bottom left | **AGAIN_BORN.100D**, aka GOG_ID.100D | (TNLDY − 22440) / 100 | 2031-04-16 12:31:18.261 |
+| bottom left, pressed | **AGAIN_BORN_CIRCUMSPECTION.100D** | (TNLDY − 22692) / 100 | 2031-12-24 07:18:15.652 |
+| bottom right | **DNPS.100D** | (TNLDY − 33·17640/48.3) / 100 | 2002-11-06 00:00:00.000 |
+
+- **TNLDY** comes from `nsukka-yg-clock.js`, a byte-identical copy of the Nsukka/Yg clock that every
+  other 3PP-NOAH site uses: the Yg year (17640/48.3 days) laid on Nsukka's calendar from 1 December and
+  recalibrated there each year, so that on 1 December all four clocks step together (+5/23 day on
+  2026-12-01).
+- **The 100-day clocks are the MDQNM engine's own.** Their Ztp values are the engine's (`EXE_TPDP.100D`,
+  `GOGID.100D` = `END_IE_PURPOSE_BIRTH.100D` and `END_IE_PURPOSE_CIRCUMSPECTION.100D` in `crf0`;
+  `DNPS12052.100D` in `sfo16`). 17651.8, 22440 and 22692 are 14160 + 100·Y for REVOTT's Y = 34.918,
+  82.80 and 85.32; DNPS.100D's Ztp is 33 Yg exactly, 277200/23 = 12052.173913… .
+- **The bottom-left clock is a button:** pressing it switches between AGAIN_BORN.100D and
+  AGAIN_BORN_CIRCUMSPECTION.100D. Each visit starts with AGAIN_BORN.100D.
+- **Precision.** TNLDY is shown to 6 decimals and a 100-day clock to 8: the same step, 86.4 ms, on every
+  clock. The readings are exact (integer arithmetic over the clock's own denominator, 23·86 400 000) and
+  are shown floored, as a clock shows the tick it has reached. Each clock's tooltip gives its formula
+  and the instant at which it reads 0.
+- **Placement.** Where the window leaves room beside the dial, the clocks are fixed to the window's
+  corners. Otherwise (on phones) the page keeps their height free above and below the dial, and when the
+  page is taller than the window they stand at the corners of the page itself, so that none of them
+  covers the dial or its buttons.
+- `clocks.js` holds the definitions and the reading. It also loads under Node
+  (`require("./clocks.js")`), for checking.
 
 ## The words inside the Ω
 

@@ -4,7 +4,8 @@
 
 `index.html` is the page: a large Ω with nine radio buttons around it —
 NTH-HOME (the nth-member page) at the top, then clockwise the nth-member sites and JOMO SFO-WAM,
-which has its own home under the 3pp-noah organisation — and four clocks at its corners (below).
+which has its own home under the 3pp-noah organisation — with four clocks at its corners and, behind the ✦ beside
+the title, the GPBS power cycle, live (both below).
 Choosing a button shows what the site is and an **Open** button; Enter or a double-click opens it
 directly. No build step, no dependencies.
 
@@ -57,9 +58,28 @@ Four clocks run at the corners of the page, all read at one instant, ten times a
   covers the dial or its buttons.
 - `clocks.js` holds the definitions and the reading. It also loads under Node
   (`require("./clocks.js")`), for checking.
-- `index.html` loads `clocks.js` and `nsukka-yg-clock.js` with `?v=` and the first 8 hex digits of the
+- `index.html` loads `clocks.js`, `nsukka-yg-clock.js` and `gpbs.js` with `?v=` and the first 8 hex digits of the
   file's SHA-256 (`sha256sum clocks.js | cut -c1-8`). Change it whenever the file changes: a browser keeps
   a script for up to 10 minutes and a refresh does not fetch it again, but a new address it fetches at once.
+
+## The GPBS power cycle (✦)
+
+The ✦ beside the title opens the GPBS power cycle, live: the author's drawing of 14 February 2025 redrawn as a
+heat-engine cycle, with the present state moving round it.
+
+- **The cycle** runs clockwise through four states at the corners (GPBN, GPBE, GPBM, TSoTS) and four devices on the
+  sides: BotS, the pump, worked by NDST; TSBS, the boiler, heated by A.G.E. from the VSSL furnace; ATDF, the turbine,
+  whose work leaves by the N://ACC.ESS shaft to TAH, the secondary output; MFR, the condenser, whose heat MF goes to
+  D.E.M., the primary output. The working fluid is EXE_TPDP.
+- **Every marking is the author's**, as written on the drawing: TNLDY in black, EXE_TPDP.100D in red and, where the
+  drawing gives one, GOG_ID.100D in blue. TNLDY that the drawing does not write is computed from EXE_TPDP.100D
+  (TNLDY = 17651.8 + 100·EXE_TPDP.100D) and shown in grey italic.
+- **The present state** is read from the same clocks as the corners (`clocks.js`): TNLDY, EXE_TPDP.100D and
+  GOG_ID.100D, ten times a second, exact and floored. It is drawn between the two markings it lies between, placed
+  by TNLDY, and the way it has come since GPBN is highlighted. The line above the drawing names those two markings
+  and how far it has gone from one to the next.
+- `gpbs.js` draws the cycle at the first press and runs it while the popup is open. Where the drawing is larger than
+  the window, the popup opens at the present state, with the readings kept in view above it.
 
 ## The words inside the Ω
 

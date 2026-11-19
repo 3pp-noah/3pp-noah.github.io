@@ -12,6 +12,7 @@
   --plane:#f9f9f7; --surface:#fcfcfb;
   --ink:#0b0b0b; --ink-2:#52514e; --muted:#898781;
   --line:#e1e0d9; --axis:#c3c2b7; --accent:#2a78d6;
+  --exe:#b3261e; --gog:#1f4fbf; --names:#1e7a3b; --pipe:#7f95c9; --now:#b56a00; --glow:rgba(42,120,214,.18);
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
@@ -19,6 +20,7 @@
     --plane:#0d0d0d; --surface:#1a1a19;
     --ink:#ffffff; --ink-2:#c3c2b7; --muted:#898781;
     --line:#2c2c2a; --axis:#383835; --accent:#3987e5;
+    --exe:#ff8170; --gog:#8aa8ff; --names:#66cc90; --pipe:#5a70ad; --now:#ffb24d; --glow:rgba(57,135,229,.28);
   }
 }
 :root[data-theme="dark"]{
@@ -26,6 +28,7 @@
   --plane:#0d0d0d; --surface:#1a1a19;
   --ink:#ffffff; --ink-2:#c3c2b7; --muted:#898781;
   --line:#2c2c2a; --axis:#383835; --accent:#3987e5;
+  --exe:#ff8170; --gog:#8aa8ff; --names:#66cc90; --pipe:#5a70ad; --now:#ffb24d; --glow:rgba(57,135,229,.28);
 }
 *{box-sizing:border-box}
 [hidden]{display:none !important}
@@ -108,11 +111,89 @@ body.stacked .clock{width:auto;max-width:calc(50% - 22px);padding:5px 8px 6px}
 body.stacked .clock .value{font-size:clamp(13px,4.1vw,17px)}
 body.stacked.scrolls{position:relative}
 body.stacked.scrolls .clock{position:absolute}
+/* the ✦ beside the title opens the GPBS power cycle, live (gpbs.js) */
+.title{position:relative}
+.magic{position:absolute;left:100%;top:50%;transform:translate(12px,-58%);width:30px;height:30px;padding:0;display:grid;
+  place-items:center;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--accent);
+  font:17px/1 Georgia,"Times New Roman",serif;cursor:pointer;transition:box-shadow .2s,border-color .2s}
+.magic:hover{border-color:var(--axis);box-shadow:0 0 0 5px var(--glow)}
+.magic:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+dialog.gpbs{width:min(1300px,calc(100vw - 16px));max-width:none;max-height:calc(100dvh - 16px);margin:auto;padding:0;
+  border:1px solid var(--line);border-radius:12px;background:var(--plane);color:var(--ink);
+  box-shadow:0 18px 60px rgba(0,0,0,.35);overflow:auto}
+dialog.gpbs::backdrop{background:rgba(8,8,8,.55)}
+.gpbs-in{padding:0 0 14px}
+.gpbs-top{position:sticky;top:0;z-index:2;padding-top:14px;background:var(--plane)}
+.gpbs-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:0 16px}
+.gpbs h2{margin:0;font-size:18px;font-weight:600;letter-spacing:.08em}
+.gpbs h2:focus{outline:none}
+.gpbs-sub{margin:2px 0 0;font-size:13px;color:var(--muted)}
+.gpbs-close{flex:none;width:34px;height:34px;padding:0;border-radius:8px;border:1px solid var(--line);background:var(--surface);
+  color:var(--ink);font:22px/1 ui-sans-serif,system-ui,sans-serif;cursor:pointer}
+.gpbs-close:hover{border-color:var(--axis)}
+.gpbs-close:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.gpbs-now{display:flex;flex-wrap:wrap;gap:6px 28px;margin:10px 16px 0}
+.gpbs-now dt{font-size:11px;font-weight:600;letter-spacing:.06em;color:var(--ink-2)}
+.gpbs-now dd{margin:0;font:500 clamp(17px,2.6vw,22px)/1.25 ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
+  font-variant-numeric:tabular-nums}
+.gpbs-now .exe{color:var(--exe)}
+.gpbs-now .gog{color:var(--gog)}
+.gpbs-where{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;margin:0;padding:8px 16px 12px;font-size:13px;color:var(--ink-2)}
+.gpbs-bar{display:inline-block;width:150px;height:6px;border-radius:3px;background:var(--line);overflow:hidden}
+.gpbs-bar span{display:block;height:100%;width:0;background:var(--now)}
+.gpbs-pct{color:var(--now);font:500 13px ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;font-variant-numeric:tabular-nums}
+.gpbs-scroll{overflow-x:auto;border-block:1px solid var(--line);background:var(--surface)}
+.gpbs-scroll svg{display:block;width:100%;min-width:1120px;height:auto}
+.gpbs-key{display:flex;flex-wrap:wrap;gap:4px 18px;margin:10px 16px 0;font-size:12.5px;color:var(--ink-2)}
+.gpbs-key b,.gpbs-key i{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;font-weight:500}
+.k-tn{color:var(--ink)} .k-c{color:var(--muted)} .k-exe{color:var(--exe)} .k-gog{color:var(--gog)} .k-now{color:var(--now)}
+.gpbs-src{margin:6px 16px 0;font-size:12.5px;color:var(--muted)}
+.gpbs svg text{font:500 13px ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace}
+.g-pipe{fill:none;stroke:var(--pipe);stroke-width:2.6}
+.g-flow{fill:none;stroke:var(--surface);stroke-width:3;stroke-dasharray:3 17;opacity:.9}
+.g-trail{fill:none;stroke:var(--now);stroke-width:7;stroke-linecap:round;stroke-linejoin:round;opacity:.28}
+.g-chev{fill:none;stroke:var(--pipe);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.g-tick{stroke:var(--pipe);stroke-width:2.4}
+.g-dev{fill:var(--surface);stroke:var(--pipe);stroke-width:2.2}
+.g-core{fill:none;stroke:var(--line);stroke-width:1.5}
+.g-state{fill:var(--ink)}
+.gpbs svg .g-name{fill:var(--names);font:700 20px ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;letter-spacing:.02em}
+.gpbs svg .g-sm{font-size:15px}
+.gpbs svg .g-big{font-size:30px;letter-spacing:.06em}
+.gpbs svg .g-sub{fill:var(--muted);font:500 11.5px ui-sans-serif,system-ui,sans-serif;letter-spacing:.05em}
+.g-tn{fill:var(--ink)}
+.g-c{fill:var(--muted);font-style:italic}
+.gpbs svg .g-exe{fill:var(--exe)}
+.gpbs svg .g-gog{fill:var(--gog)}
+.gpbs svg .g-strong{font-weight:700;font-size:14px}
+.gpbs svg .g-ev{fill:var(--ink-2);font:600 11px ui-sans-serif,system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase}
+.gpbs svg .g-ftxt{fill:var(--ink-2);font:500 12.5px ui-sans-serif,system-ui,sans-serif}
+.g-fname{fill:var(--names);font-weight:700}
+.g-energy{stroke:var(--ink-2);stroke-width:1.8}
+.g-dash{stroke-dasharray:6 5}
+.g-head{fill:var(--ink-2)}
+.g-shaft{stroke:var(--ink-2);stroke-width:2}
+.gpbs svg .g-trib{fill:var(--exe);font:600 10.5px ui-sans-serif,system-ui,sans-serif;letter-spacing:.08em}
+.g-now-ring{fill:none;stroke:var(--now);stroke-width:2.5}
+.g-now-dot{fill:var(--now)}
+.gpbs svg .g-now-txt{font:600 12.5px ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace}
+.g-now-tn{fill:var(--ink)}
+.g-now-exe{fill:var(--exe)}
+.g-now-gog{fill:var(--gog)}
+@media (prefers-reduced-motion:no-preference){
+  .g-flow{animation:g-flow 1.6s linear infinite}
+  .g-now-ring{animation:g-pulse 2.4s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+}
+@keyframes g-flow{to{stroke-dashoffset:-20}}
+@keyframes g-pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(1.6)}}
 </style>
 <script src="https://3pp-noah.github.io/usage.js" defer></script>
 </head>
 <body>
-<h1>3PP-NOAH</h1>
+<div class="title">
+  <h1>3PP-NOAH</h1>
+  <button type="button" class="magic" id="magic" aria-haspopup="dialog" aria-label="GPBS power cycle, live" title="GPBS power cycle, live">✦</button>
+</div>
 
 <div class="dial">
   <div class="ring"></div>
@@ -144,9 +225,34 @@ body.stacked.scrolls .clock{position:absolute}
 <button type="button" class="clock tr" id="clock-tr" hidden><span class="name"></span><span class="value" role="timer"></span><span class="detail"></span></button>
 <button type="button" class="clock bl" id="clock-bl" hidden><span class="name"></span><span class="value" role="timer"></span><span class="detail"></span></button>
 <button type="button" class="clock br" id="clock-br" hidden><span class="name"></span><span class="value" role="timer"></span><span class="detail"></span></button>
+<dialog class="gpbs" id="gpbs" aria-labelledby="gpbs-title">
+  <div class="gpbs-in">
+    <div class="gpbs-top">
+    <div class="gpbs-head">
+      <div>
+        <h2 id="gpbs-title" tabindex="-1" autofocus>GPBS power cycle</h2>
+        <p class="gpbs-sub">The present state, live · Nsukka <span id="gpbs-ns" role="timer"></span></p>
+      </div>
+      <button type="button" class="gpbs-close" id="gpbs-close" aria-label="Close">×</button>
+    </div>
+    <dl class="gpbs-now">
+      <div><dt>TNLDY</dt><dd id="gpbs-tn" role="timer"></dd></div>
+      <div><dt>EXE_TPDP.100D</dt><dd class="exe" id="gpbs-exe" role="timer"></dd></div>
+      <div><dt>GOG_ID.100D</dt><dd class="gog" id="gpbs-gog" role="timer"></dd></div>
+    </dl>
+    <p class="gpbs-where"><span id="gpbs-where"></span><span class="gpbs-bar" role="timer"><span id="gpbs-bar"></span></span><span class="gpbs-pct" id="gpbs-pct" role="timer"></span></p>
+    </div>
+    <div class="gpbs-scroll" id="gpbs-scroll"></div>
+    <p class="gpbs-key"><span><b class="k-tn">15851.8</b> TNLDY</span><span><i class="k-c">21143.6</i> TNLDY computed from EXE_TPDP.100D</span>
+      <span><b class="k-exe">−18.00</b> EXE_TPDP.100D = (TNLDY − 17651.8)/100</span><span><b class="k-gog">34.918</b> GOG_ID.100D = (TNLDY − 22440)/100</span>
+      <span><b class="k-now">●</b> the present state, and the way it has come</span></p>
+    <p class="gpbs-src">Redrawn from the drawing of 14 February 2025. The cycle runs clockwise: BotS (pump), TSBS (boiler), ATDF (turbine), MFR (condenser).</p>
+  </div>
+</dialog>
 <!-- ?v= is the first 8 hex digits of the file's SHA-256: change it with the file, so that browsers fetch the new one -->
 <script src="nsukka-yg-clock.js?v=889a50eb"></script>
 <script src="clocks.js?v=95834e1b"></script>
+<script src="gpbs.js?v=868ae22d"></script>
 
 <script>
 "use strict";

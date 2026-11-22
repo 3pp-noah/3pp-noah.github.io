@@ -1,7 +1,7 @@
 /* The four clocks at the corners of the 3PP-NOAH page.
 
    TNLDY is read from Nsukka on the Yg clock (nsukka-yg-clock.js). The others are 100-day clocks, each reading
-   (TNLDY - Ztp) / 100: five of the MDQNM engine's and two countdowns of the author's.
+   (TNLDY - Ztp) / 100: five of the MDQNM engine's and three of the author's.
 
      EXE_TPDP.100D                         Ztp 17651.8  = 14160 + 100·34.918, REVOTT's EXE_TPDP slice (crf0 "on EXE_TPDP.100D")
      END_IE_PURPOSE.100D, aka GOG_ID.100D  Ztp 22440    = 14160 + 100·82.80 (crf0 "on GOGID.100D", "on END_IE_PURPOSE_BIRTH.100D")
@@ -10,9 +10,11 @@
      DNPS.100D                             Ztp 33 Yg    = 33·17640/48.3 (sfo16 "on DNPS12052.100D")
      EXE_CDOWN.100D                        Ztp 25931.8  the author's countdown (2026-11-19)
      ARM_CDOWN.100D                        Ztp 26414.8  the author's countdown (2026-11-19)
+     WHIZZ-KIDS-BEAST.100D                 Ztp 16610    the author's (2026-11-22)
 
-   Three corners are buttons that switch between two clocks: top right EXE_TPDP.100D and EXE_CDOWN.100D, bottom
-   left END_IE_PURPOSE.100D and AGAIN_BORN_CIRCUMSPECTION.100D, bottom right DNPS.100D and ARM_CDOWN.100D.
+   Three corners are buttons that step through their clocks in turn: top right EXE_TPDP.100D and EXE_CDOWN.100D,
+   bottom left END_IE_PURPOSE.100D and AGAIN_BORN_CIRCUMSPECTION.100D, bottom right DNPS.100D, ARM_CDOWN.100D and
+   WHIZZ-KIDS-BEAST.100D.
 
    Readings are exact: Z is an integer numerator over 23·86 400 000 (zOf().num), so each reading is a ratio of
    BigInts, shown floored, as a clock shows the tick it has reached: TNLDY to 6 places and a 100-day clock to 8,
@@ -39,6 +41,7 @@
     dnps: { name: "DNPS.100D", ztp: [33n * BigInt(Yg.YG_NUM), BigInt(Yg.YG_DEN)], ztpText: "33·17640/48.3" },
     execd: { name: "EXE_CDOWN.100D", ztp: Yg.frac("25931.8"), ztpText: "25931.8" },
     armcd: { name: "ARM_CDOWN.100D", ztp: Yg.frac("26414.8"), ztpText: "26414.8" },
+    wkb: { name: "WHIZZ-KIDS-BEAST.100D", ztp: Yg.frac("16610"), ztpText: "16610" },
   };
   for (const c of Object.values(CLOCKS)) {
     if (c.unit === undefined) c.unit = 100n;
@@ -50,10 +53,11 @@
   /* Every instant (epoch ms) at which a clock reads 0. */
   const zeros = c => Yg.instantsOfFrac(c.ztp[0], c.ztp[1]);
 
-  /* The corners that switch, each between its two clocks; every visit starts on the first. */
-  const PAIRS = { tr: [CLOCKS.exe, CLOCKS.execd], bl: [CLOCKS.end, CLOCKS.circ], br: [CLOCKS.dnps, CLOCKS.armcd] };
+  /* The corners that switch, each through its clocks in turn; every visit starts on the first. */
+  const SWITCH = { tr: [CLOCKS.exe, CLOCKS.execd], bl: [CLOCKS.end, CLOCKS.circ],
+                   br: [CLOCKS.dnps, CLOCKS.armcd, CLOCKS.wkb] };
 
-  const api = { CLOCKS, PAIRS, fixed, read, zeros };
+  const api = { CLOCKS, SWITCH, fixed, read, zeros };
   root.HubClocks = api;
   if (typeof module === "object" && module && module.exports) module.exports = api;
   if (typeof document === "undefined") return;
@@ -64,7 +68,7 @@
   if (!box.tl || !box.tr || !box.bl || !box.br) return;
   const all = [box.tl, box.tr, box.bl, box.br];
   const part = (el, cls) => el.querySelector("." + cls);
-  const shown = { tr: 0, bl: 0, br: 0 }, cur = k => PAIRS[k][shown[k]];
+  const shown = { tr: 0, bl: 0, br: 0 }, cur = k => SWITCH[k][shown[k]], next = k => (shown[k] + 1) % SWITCH[k].length;
 
   function describe(el, c) {
     const name = part(el, "name");
@@ -86,8 +90,8 @@
     const swap = document.createElement("span");
     swap.className = "swap"; swap.setAttribute("aria-hidden", "true"); swap.textContent = "⇄";
     part(el, "name").append(swap);
-    el.title += `. Press to show ${PAIRS[k][1 - shown[k]].name}.`;
-    el.setAttribute("aria-pressed", String(shown[k] === 1));
+    el.title += `. Press to show ${SWITCH[k][next(k)].name}.`;
+    if (SWITCH[k].length === 2) el.setAttribute("aria-pressed", String(shown[k] === 1));  // a toggle; three is a cycle
   }
 
   const value = Object.fromEntries(Object.entries(box).map(([k, el]) => [k, part(el, "value")]));
@@ -96,7 +100,7 @@
   function render() {
     const now = Date.now(), num = Yg.zOf(now).num;                // one instant for all four
     value.tl.textContent = read(CLOCKS.tnldy, num);
-    for (const k of Object.keys(PAIRS)) value[k].textContent = read(cur(k), num);
+    for (const k of Object.keys(SWITCH)) value[k].textContent = read(cur(k), num);
     nsukka.textContent = "Nsukka " + Yg.nsukka(now).slice(0, 19);
     if (now >= recal) {
       const r = Yg.nextRecalibration(now);
@@ -132,8 +136,8 @@
   }
   const soon = () => { if (!pending) pending = requestAnimationFrame(place); };
 
-  for (const k of Object.keys(PAIRS)) {
-    box[k].addEventListener("click", () => { shown[k] = 1 - shown[k]; show(k); render(); });
+  for (const k of Object.keys(SWITCH)) {
+    box[k].addEventListener("click", () => { shown[k] = next(k); show(k); render(); });
     show(k);
   }
   render();

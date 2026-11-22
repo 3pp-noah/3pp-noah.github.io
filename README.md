@@ -28,6 +28,8 @@ Four clocks run at the corners of the page, all read at one instant, ten times a
 | corner | clock | reading | it reads 0 at (Nsukka) |
 |---|---|---|---|
 | top left | **TNLDY** | TNLDY, read from Nsukka on the Yg clock | |
+| top left, pressed | **TNL.YG** | TNLDY / Yg, Yg = 17640/48.3 days | |
+| top left, pressed again | **TNL.YJ** | TNLDY / yJ, yJ = 360 days | |
 | top right | **EXE_TPDP.100D** | (TNLDY − 17651.8) / 100 | 2018-03-07 03:32:52.174 |
 | top right, pressed | **EXE_CDOWN.100D** | (TNLDY − 25931.8) / 100 | 2040-11-06 08:45:54.783 |
 | bottom left | **END_IE_PURPOSE.100D**, aka GOG_ID.100D | (TNLDY − 22440) / 100 | 2031-04-16 12:31:18.261 |
@@ -47,11 +49,13 @@ Four clocks run at the corners of the page, all read at one instant, ten times a
 - **Three are the author's own.** Two are countdowns (2026-11-19): EXE_CDOWN.100D, Ztp 25931.8, and
   ARM_CDOWN.100D, Ztp 26414.8; like every 100-day clock they read (TNLDY − Ztp)/100, rising through negative values
   to 0. The third is WHIZZ-KIDS-BEAST.100D, Ztp 16610 (2026-11-22).
-- **Three corners are buttons.** Pressing one moves it to its next clock: top right EXE_TPDP.100D and
-  EXE_CDOWN.100D; bottom left END_IE_PURPOSE.100D and AGAIN_BORN_CIRCUMSPECTION.100D; bottom right DNPS.100D,
-  ARM_CDOWN.100D, WHIZZ-KIDS-BEAST.100D and back to DNPS.100D. Each visit starts with the first in each corner.
-- **Precision.** TNLDY is shown to 6 decimals and a 100-day clock to 8: the same step, 86.4 ms, on every
-  clock. The readings are exact (integer arithmetic over the clock's own denominator, 23·86 400 000) and
+- **TNL.YG and TNL.YJ** are TNLDY counted in Yg and in yJ, the engine's own `*tnl-yg*` and `*tnl-yj*` (Ztp 0).
+- **Every corner is a button.** Pressing one moves it to its next clock: top left TNLDY, TNL.YG, TNL.YJ and back to
+  TNLDY; top right EXE_TPDP.100D and EXE_CDOWN.100D; bottom left END_IE_PURPOSE.100D and
+  AGAIN_BORN_CIRCUMSPECTION.100D; bottom right DNPS.100D, ARM_CDOWN.100D, WHIZZ-KIDS-BEAST.100D and back to DNPS.100D.
+  Each visit starts with the first in each corner.
+- **Precision.** TNLDY is shown to 6 decimals and a 100-day clock to 8, both a step of 86.4 ms; TNL.YG and
+  TNL.YJ to 9, a step of about 31 ms. The readings are exact (integer arithmetic over the clock's own denominator, 23·86 400 000) and
   are shown floored, as a clock shows the tick it has reached. Each clock's tooltip gives its formula
   and the instant at which it reads 0.
 - **Placement.** Where the window leaves room beside the dial, the clocks are fixed to the window's
